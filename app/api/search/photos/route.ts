@@ -3,11 +3,15 @@ import unsplash from "@/lib/unsplash";
 
 export const GET = async (req: NextRequest) => {
     const keyword = req.nextUrl.searchParams.get("query")
+    const pageStr = req.nextUrl.searchParams.get("page")
+    const page = pageStr ? parseInt(pageStr) : undefined
+
+    console.log(`search ${keyword} ${page}`)
 
     if (!keyword) {
         return NextResponse.json({error: "query is required"})
     }
-    const res = await unsplash.search.getPhotos({query: keyword as string})
+    const res = await unsplash.search.getPhotos({query: keyword as string, page: page, perPage: 16})
 
     if (res.type == "error") {
         console.log(res.errors)
