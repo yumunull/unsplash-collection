@@ -1,8 +1,30 @@
+"use client"
 import Link from "next/link";
 import Image from "next/image";
 import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
+import {useState} from "react";
 
 const CollectionsPage = () => {
+    const [title, setTitle] = useState("")
+    const [open, setOpen] = useState(false)
+    const handleCreateCollections = async () => {
+        const formData = new FormData()
+        formData.append("title", title)
+        setTitle("")
+        const res = await fetch("/api/collections", {
+            method: "POST",
+            body: formData
+        })
+        const json = await res.json()
+        if (!res.ok) {
+            console.log(`error occurred on creating collections: ${title} - ${json.errors}`)
+        }
+        console.log(JSON.stringify(json))
+        handleCloseDialog()
+    }
+    const handleCloseDialog = () => {
+        setOpen(false)
+    }
     return (
         <div className={`flex flex-col grow items-center`}>
             <span
@@ -12,7 +34,7 @@ const CollectionsPage = () => {
                 href={"https://unsplash.com/license"}><b className={`underline`}>Unsplash Licence</b></Link>
             </p>
 
-            <Dialog>
+            <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
                     <div className={"grid w-full grid-cols-3 gap-8 grid-rows-[300px] mt-8"}>
                         <div
@@ -26,10 +48,13 @@ const CollectionsPage = () => {
                     <DialogHeader>
                         <DialogTitle className={"mx-auto"}>Add collection</DialogTitle>
                     </DialogHeader>
-                    <input className={"px-4 py-3 mt-4 outline-none border-gray border-2 border-solid rounded-md"}/>
+                    <input
+                        value={title}
+                        onChange={(e)=>{setTitle(e.target.value)}}
+                        className={"px-4 py-3 mt-4 outline-none border-gray border-2 border-solid rounded-md"}/>
                     <DialogFooter className={"mx-auto flex gap-4"}>
-                        <button className={`cursor-pointer px-4 py-2 transition-all duration-150 hover:bg-gray rounded-sm`}>Save</button>
-                        <button className={`cursor-pointer px-4 py-2 transition-all duration-150 hover:bg-gray rounded-sm`}>Cancel</button>
+                        <button onClick={handleCreateCollections} className={`cursor-pointer px-4 py-2 transition-all duration-150 hover:bg-gray rounded-sm`}>Save</button>
+                        <button onClick={handleCloseDialog} className={`cursor-pointer px-4 py-2 transition-all duration-150 hover:bg-gray rounded-sm`}>Cancel</button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
