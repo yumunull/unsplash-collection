@@ -52,7 +52,7 @@ body {
 }
 
 .button-text, button {
-    @apply text-[0.875rem] font-light;
+    @apply text-[0.875rem] font-medium;
 }
 
 .large-description {

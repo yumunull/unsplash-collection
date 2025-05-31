@@ -6,8 +6,7 @@ import {useCallback, useEffect, useRef} from "react";
 import useSWRInfinite from "swr/infinite";
 import {Photos} from "unsplash-js/src/methods/search/types/response";
 import useSearch from "@/stores/useSearch";
-
-const fetcher = (url: string) => fetch(url).then((res) => res.json())
+import {fetcher} from "@/lib/fetcher";
 
 const ResultPage = () => {
     const {keyword} = useSearch()
