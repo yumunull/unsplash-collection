@@ -11,7 +11,7 @@ const Gallery = () => {
         for (let i = offset; i < photos.results.length; i += gap) {
             const photo = photos.results[i]
             res.push((
-                <div key={photo.alt_description}>
+                <div key={`${photo.id}-${i}`}>
                     <Image className={"rounded-sm"} src={photo.urls.raw} alt={photo.description ?? ""}
                            width={photo.width} height={photo.height}/>
                 </div>

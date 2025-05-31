@@ -22,6 +22,7 @@ const ResultPage = () => {
             appendPhotos(pages[pages.length - 1])
         }
     })
+    const latestFetchPage = useRef(0)
 
     useEffect(() => {
         setSize(1).then(()=>{
@@ -29,23 +30,32 @@ const ResultPage = () => {
         })
     }, [keyword, setPhotos, setSize]);
 
-    useEffect(() => {
-        window.addEventListener("scrollend", async () => {
-            console.log("window scrollend")
-            const rect = updatePhotosContainer.current?.getBoundingClientRect()
-            if (!rect) return;
-            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-            const containerBottomInDoc = rect.bottom + scrollTop
-            const windowBottomInDoc = scrollTop + window.innerHeight
+    const listener = useCallback(() => {
+        console.log("window scrollend")
+        const rect = updatePhotosContainer.current?.getBoundingClientRect()
+        if (!rect) return;
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const containerBottomInDoc = rect.bottom + scrollTop
+        const windowBottomInDoc = scrollTop + window.innerHeight
 
-            if (windowBottomInDoc >= containerBottomInDoc - 10) {
-                if (!isLoading) {
-                    console.log("fetch next page")
-                    await setSize(size + 1)
-                }
+        if (windowBottomInDoc >= containerBottomInDoc - 10) {
+            if (!isLoading && size > latestFetchPage.current) {
+                console.log("fetch next page")
+                latestFetchPage.current = size
+                setSize(size + 1).then()
             }
-        })
+        }
     }, [isLoading, setSize, size])
+
+    useEffect(() => {
+        window.addEventListener("scroll", listener)
+
+        return () => {
+            console.log("cleanup")
+            window.removeEventListener("scroll", listener)
+        }
+    }, [listener])
+
     return (
         <div className={`flex w-full glow relative`}>
             <div className={"flex flex-col w-full"}>

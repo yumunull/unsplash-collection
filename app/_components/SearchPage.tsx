@@ -1,10 +1,6 @@
 "use client"
 import Image from "next/image";
 import SearchBar from "@/app/_components/SearchBar";
-import {usePhotos} from "@/stores/usePhotos";
-import Gallery from "@/app/_components/Gallery";
-import {useEffect, useRef} from "react";
-import useSearch from "@/stores/useSearch";
 
 const SearchPage = () => {
     return (
