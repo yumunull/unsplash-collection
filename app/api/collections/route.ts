@@ -1,7 +1,9 @@
 ﻿import unsplash from "@/lib/unsplash";
 import {NextRequest, NextResponse} from "next/server";
-export const GET = async () => {
-    const res = await fetch(`https://api.unsplash.com/users/${process.env.UNSPLASH_USERNAME}/collections`, {
+export const GET = async (req:NextRequest) => {
+    const page = req.nextUrl.searchParams.get("page") || 1
+
+    const res = await fetch(`https://api.unsplash.com/users/${process.env.UNSPLASH_USERNAME}/collections/?page=${page}&per_page=6`, {
         headers: {
             "Authorization": `Bearer ${process.env.UNSPLASH_AUTH_KEY}`
         }
@@ -12,6 +14,7 @@ export const GET = async () => {
     }
 
     const json = await res.json()
+    console.log(JSON.stringify(json))
     return NextResponse.json(json)
 }
 
