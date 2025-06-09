@@ -3,28 +3,20 @@ import Link from "next/link";
 import Image from "next/image";
 import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
 import {useEffect, useState} from "react";
-import {fetcher} from "@/lib/fetcher";
-import useSWRInfinite from "swr/infinite";
 import CollectionsPreview from "@/app/_components/CollectionsPreview";
-import {useCollections} from "@/stores/useCollections";
-import {Basic} from "unsplash-js/dist/methods/collections/types";
-
-const getKey = (pageIndex: number, previousPageData: Collections) => {
-    if (previousPageData && !previousPageData.results.length) return null
-    return `/api/collections?page=${pageIndex + 1}`
-}
+import {useCollections, useCollectionsSWR} from "@/stores/useCollections";
 
 const CollectionsPage = () => {
     const [title, setTitle] = useState("")
     const [open, setOpen] = useState(false)
     const {collections, setCollections} = useCollections()
-    const {data, mutate} = useSWRInfinite<Basic[]>(getKey, fetcher, {
-        revalidateOnFocus: false,
-        revalidateOnReconnect: false,
-        onSuccess: (pages) => {
-            setCollections(pages.flat())
-        }
-    })
+    const {data, mutate} = useCollectionsSWR()
+
+    useEffect(() => {
+        if(!data) return
+        setCollections(data.flat())
+    }, [data, setCollections]);
+    
     const handleCreateCollections = async () => {
         const formData = new FormData()
         formData.append("title", title)

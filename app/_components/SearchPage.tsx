@@ -1,8 +1,10 @@
 "use client"
 import Image from "next/image";
 import SearchBar from "@/app/_components/SearchBar";
+import useSearch from "@/stores/useSearch";
 
 const SearchPage = () => {
+    const {keyword, setKeyword, setSearched} = useSearch()
     return (
         <div className={`flex w-full glow relative`}>
             <>
@@ -13,7 +15,7 @@ const SearchPage = () => {
                 <div className={`flex flex-col justify-center items-center w-full h-full gap-4`}>
                     <h1 className={`title`}>Search</h1>
                     <p className={`large-description`}>Search high-resolution images from Unsplash...</p>
-                    <SearchBar/>
+                    <SearchBar text={keyword} setText={setKeyword} searchCallback={() => setSearched(true)}/>
                 </div>
             </>
         </div>

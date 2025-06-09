@@ -9,7 +9,7 @@ import useSearch from "@/stores/useSearch";
 import {fetcher} from "@/lib/fetcher";
 
 const ResultPage = () => {
-    const {keyword} = useSearch()
+    const {keyword, setKeyword, setSearched} = useSearch()
     const getKey = useCallback((pageIndex: number, previousPageData: Photos) => {
         if (previousPageData && !previousPageData.results.length) return null
         return `/api/search/photos?query=${keyword}&page=${pageIndex + 1}`
@@ -61,7 +61,7 @@ const ResultPage = () => {
                 <div
                     className={`w-full bg-[url(/gradiend-bg.svg)] bg-cover bg-no-repeat grow-0 flex h-28 relative`}>
                     <div className={`absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-[720px]`}>
-                        <SearchBar/>
+                        <SearchBar text={keyword} setText={setKeyword}/>
                     </div>
                 </div>
 
